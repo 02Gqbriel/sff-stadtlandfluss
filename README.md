@@ -1,5 +1,4 @@
-# sff-stadtlandfluss
-slf
-Nadim Bhatti war hier
+# Fullstack StadtLandFluss
 
-Nadim Bhatti ist der krasseste
+@02Gqbriel
+@NadimBhatti05
