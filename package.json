@@ -1,16 +1,14 @@
 {
     "dependencies": {
-        "concurrently": "^7.0.0"
+        "express": "^4.17.3",
+        "ws": "^8.5.0"
     },
     "name": "sff-stadtlandfluss",
     "description": "",
     "version": "1.0.0",
     "main": "index.js",
-    "devDependencies": {},
     "scripts": {
-        "start": "concurrently -c bgRed,bgBlue \"npm run start:backend\" \"npm run start:frontend\"",
-        "start:backend": "cd ./backend && npm start",
-        "start:frontend": "cd ./frontend && npm start"
+        "dev": "nodemon server.js"
     },
     "repository": {
         "type": "git",
@@ -22,5 +20,8 @@
     "bugs": {
         "url": "https://github.com/02Gqbriel/sff-stadtlandfluss/issues"
     },
-    "homepage": "https://github.com/02Gqbriel/sff-stadtlandfluss#readme"
+    "homepage": "https://github.com/02Gqbriel/sff-stadtlandfluss#readme",
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
 }
