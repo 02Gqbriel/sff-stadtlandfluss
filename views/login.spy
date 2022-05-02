@@ -1,1 +1,66 @@
-<h1>{{name}}</h1>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StadtLandFluss | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <style>
+    *{
+        overflow: hidden;
+        font-family: 'Acme', sans-serif;
+    }
+    body{
+        background-color: #B8FFF9;
+        text-align: center;
+        
+    }
+    h1{
+        font-size: 70px;
+    }
+    .inputCode{
+        margin-top: 20px;
+        width: 30vw;
+        height: 6vh;
+        font-size: 40px;
+        border-radius: 20px;
+    }
+    .loginSubmit{
+        margin-top: 60px;
+    }
+    .loginButton{
+        background-color: #42C2FF;
+        border-radius: 20px;
+        width: 240px;
+        font-size: 30px;
+    }
+    .loginUsernameInfo, .loginCodeInfo{
+        margin-top: 50px;
+        font-size: 20px;
+    }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    <div class="loginUsernameInfo">
+        <p>Geben Sie hier ihren Benutzernamen ein:</p>
+    </div>
+    <div class="loginUsername">
+        <input type="text" class="inputCode">
+    </div>
+
+    <div class="loginCodeInfo">
+        <p>Geben Sie hier den Lobbycode ein:</p>
+    </div>
+    <div class="loginCode">
+        <input type="text" class="inputCode">
+    </div>
+    
+    <div class="loginSubmit">
+        <button class="loginButton" type="submit">Raum betreten</button>
+    </div>
+</body>
+</html>
