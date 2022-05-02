@@ -1,73 +1,71 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StadtLandFluss | Erstellen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet" />
     <style>
-    *{
-        overflow: hidden;
-        font-family: 'Acme', sans-serif;
-    }
-    body{
-        background-color: #B8FFF9;
-        text-align: center;
-    }
-    h1{
-        font-size: 70px;
-    }
-    .settingsContainer{
-        text-align: left;
-        width: 35vw;
-        font-size: 30px;
-        line-height: 80px;
-    }
-    input{
-        width: 300px;
-        height: 30px;
-        font-size: 25px;
-        border-radius: 10px;
-    }
-    .centerStuff{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .createGame{
-        background-color: #42C2FF;
-        border-radius: 20px;
-        width: 140px;
-        margin-top: 40px;
-        font-size: 30px;
-    }
+        * {
+            overflow: hidden;
+            font-family: 'Acme', sans-serif;
+        }
+        
+        body {
+            background-color: #b8fff9;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 70px;
+        }
+        
+        .settingsContainer {
+            text-align: left;
+            width: 35vw;
+            font-size: 30px;
+            line-height: 80px;
+        }
+        
+        input {
+            width: 300px;
+            height: 30px;
+            font-size: 25px;
+            border-radius: 10px;
+        }
+        
+        .centerStuff {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .createGame {
+            background-color: #42c2ff;
+            border-radius: 20px;
+            width: 140px;
+            margin-top: 40px;
+            font-size: 30px;
+        }
     </style>
 </head>
+
 <body>
     <h1>Erstellen</h1>
     <div class="centerStuff">
         <div class="settingsContainer">
             Anzahl der Runden:
-            <input type="number" class="rundenzahl"><br>
-            Zeit pro Runde (in Minuten):
-            <input type="number" class="rundenzeit"><br>
-            Anzahl der Kategorien:
-            <input type="number" class="anzKategorien"><br>
-            Kategorie 1:
-            <input type="text"><br>
-            Kategorie 2:
-            <input type="text"><br>
-            Kategorie 3:
-            <input type="text"><br>
-            Kategorie 4:
-            <input type="text">
+            <input type="number" class="rundenzahl" />
+            <br /> Zeit pro Runde (in Minuten): <input type="number" class="rundenzeit" /> <br /> Anzahl der Kategorien: <input type="number" class="anzKategorien" /> <br /> Kategorie 1: <input type="text" /> <br /> Kategorie 2: <input type="text" />            <br /> Kategorie 3: <input type="text" /> <br /> Kategorie 4:<input type="text" />
         </div>
     </div>
     <div class="submitSettings">
         <button type="submit" class="createGame">Erstellen</button>
     </div>
 </body>
+
 </html>
