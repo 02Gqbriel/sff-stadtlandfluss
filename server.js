@@ -1,51 +1,63 @@
-const express = require('express');
-const ws = require('ws');
+const express = require('express'),
+    ws = require('ws'),
+    path = require('path'),
+    sprightly = require('sprightly');
 
-const app = express();
+const app = express(),
+    wsServer = new ws.Server({ noServer: true });
 
-//database
+app.engine('spy', sprightly);
+app.set('view engine', 'spy');
+
+// DATABASE
 
 const connections = {};
 
 const lobbies = {};
 
-// -------
+// =========================================
+
+// HTTP Requests
 
 app.get('/', (req, res) => {
-    res.redirect('/page?name=login');
+    console.log(req.originalUrl);
+    res.redirect('/page?_=login');
 });
 
 app.get('/page', (req, res) => {
-    switch (req.query.name) {
+    let data = null;
+    switch (req.query['_']) {
         case 'login':
-            res.send('login');
+            data = { name: 'hello' };
             break;
-        default:
-            res.status(404).send('Error page: ' + req.query.name + ' Not Found!');
+        case 'create':
+            break;
+        case 'lobby':
+            break;
+        case 'answer':
+            break;
+        case 'score':
+            break;
+        case 'admin':
+            break;
+        case 'podium':
+            break;
     }
+
+    res.render(`${req.query['_']}`, data);
 });
 
 app.get('/script', (req, res) => {
-    switch (req.query.name) {
-        case 'login':
-            res.send('login');
-            break;
-        default:
-            res.send('Error script: ' + req.query.name + ' Not Found!');
-    }
+    res.sendFile(path.resolve(__dirname, 'public', 'script.js'));
 });
 
 app.get('/style', (req, res) => {
-    switch (req.query.name) {
-        case 'login':
-            res.send('login');
-            break;
-        default:
-            res.status(404).send('Error style: ' + req.query.name + ' Not Found!');
-    }
+    res.sendFile(path.resolve(__dirname, 'public', 'style.css'));
 });
 
-const wsServer = new ws.Server({ noServer: true });
+// =========================================
+
+// WEBSOCKET Connections
 
 wsServer.on('connection', (socket) => {
     socket.on('message', (message) => {
@@ -55,13 +67,26 @@ wsServer.on('connection', (socket) => {
 });
 
 wsServer.on('error', (error) => {
-    console.log(error);
+    console.log('[WEBSOCKET]> ', error);
 });
 
-const server = app.listen(3000);
+wsServer.on('close', () => {
+    console.log('[WEBSOCKET]> ', this);
+});
+
+// =========================================
+
+const server = app.listen(3000, (err) => {
+    if (err) return console.log('[HTTP]> ', err);
+    console.log('[HTTP]> Server listening on http://localhost:3000');
+});
 
 server.on('upgrade', (request, socket, head) => {
     wsServer.handleUpgrade(request, socket, head, (socket) => {
         wsServer.emit('connection', socket, request);
     });
 });
+
+// App Templates
+
+function getAppTemplates(n = String()) {}
