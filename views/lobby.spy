@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StadtLandFluss | Lobby</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <style>
+    *{
+        font-family: 'Acme', sans-serif;
+    }
+    body{
+        background-color: #B8FFF9;
+        text-align: center;
+    }
+    h1{
+        font-size: 70px;
+    }
+    p{
+        font-size: 30px;
+    }
+    .centerStuff{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .spieler{
+        width: 45vw;
+        font-size: 30px;
+        background-color: white;
+    }
+    th, td{
+        height: 80px;
+    }
+    .spieler, th, td{
+        border: 3px solid black;
+        border-collapse: collapse;
+    }
+    .spielstart{
+        background-color: #42C2FF;
+        border-radius: 20px;
+        margin: 50px 0 50px;
+        font-size: 30px;
+    }
+    </style>
+</head>
+<body>
+    <h1>Lobby</h1>
+    <p>Anzahl der Spieler: </p>
+    <div class="centerStuff">
+        <div class="spielerContainer">
+            <table class="spieler">
+                <tr>
+                    <th style="background-color: #42C2FF;">Spieler</th>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="start">
+        <button type="submit" class="spielstart">Spiel starten</button>
+    </div>
+</body>
+</html>
