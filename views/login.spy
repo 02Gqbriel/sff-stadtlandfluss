@@ -69,7 +69,14 @@
 
     <div class="loginSubmit">
         <button class="loginButton" type="submit">Raum betreten</button>
+        <button class="createButton loginButton" type="submit">Raum erstellen</button>
     </div>
+
+    <script>
+        document.querySelector('.createButton').onclick = () => {
+            location.replace('/page?_=create');
+        };
+    </script>
 </body>
 
 </html>

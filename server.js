@@ -1,13 +1,15 @@
 const express = require('express'),
     ws = require('ws'),
     path = require('path'),
-    sprightly = require('sprightly');
+    sprightly = require('sprightly'),
+    rndmstr = require('randomstring');
 
 const app = express(),
     wsServer = new ws.Server({ noServer: true });
 
 app.engine('spy', sprightly);
 app.set('view engine', 'spy');
+app.use(express.json());
 
 // DATABASE
 
@@ -55,6 +57,13 @@ app.get('/style', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'style.css'));
 });
 
+app.post('/create', async(req, res) => {
+    const data = req.body;
+    console.log(data);
+
+    res.send('eijfoseijfsoeijfosiejf');
+});
+
 // =========================================
 
 // WEBSOCKET Connections
@@ -87,6 +96,16 @@ server.on('upgrade', (request, socket, head) => {
     });
 });
 
-// App Templates
+// =========================================
 
-function getAppTemplates(n = String()) {}
+// Utitlity Function
+
+async function createLobby(data) {
+    const lobbycode = rndmstr.generate({ capitalization: 'uppercase', length: 6 });
+
+    if (lobbies[lobbycode] == undefined) {
+        lobbies[lobbycode] = {};
+    } else {
+        createLobby(data);
+    }
+}

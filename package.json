@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "express": "^4.17.3",
+        "randomstring": "^1.2.2",
         "sprightly": "^1.0.3",
         "ws": "^8.5.0"
     },
