@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.png" />
     <style>
         * {
             overflow-x: hidden;
@@ -121,12 +121,18 @@
             const i = [...document.querySelectorAll('input')],
                 r = [];
             for (let j = 0; j < i.length; j++) {
-                const v = i[j].value;
+                var v = i[j].value;
 
                 if (v == '' || v == undefined) return;
 
+                if (j < 3) {
+                    v = parseInt(v);
+                }
+
+                console.log(v);
+
                 r.push({
-                    id: i[j].classList[0] == undefined ? 'kategorie' + (j - 2) : i[j].classList[0],
+                    id: i[j].classList[0] == undefined ? 'kategorie_' + (j - 2) : i[j].classList[0],
                     val: v,
                 });
             }

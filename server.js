@@ -1,3 +1,4 @@
+const { timeStamp } = require('console');
 const express = require('express'),
     ws = require('ws'),
     path = require('path'),
@@ -16,6 +17,7 @@ app.use(express.json());
 const connections = [];
 
 const lobbies = {};
+const lobbyIDs = [];
 
 // =========================================
 
@@ -57,11 +59,15 @@ app.get('/style', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'style.css'));
 });
 
+app.get('/favicon.png', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'favicon.ico'));
+});
+
 app.post('/create', async(req, res) => {
     const data = req.body;
     console.log(data);
 
-    res.send('eijfoseijfsoeijfosiejf');
+    res.sendStatus(createLobby(data));
 });
 
 // =========================================
@@ -107,10 +113,22 @@ server.on('upgrade', (request, socket, head) => {
 function createLobby(data) {
     const lobbycode = rndmstr.generate({ capitalization: 'uppercase', length: 6 });
 
+    for (let i = 0; i < lobbyIDs.length; i++) {
+        if (Date.now() - lobbies[lobbyIDs[i]].timestamp >= 360000) {}
+    }
+
     if (lobbies[lobbycode] == undefined) {
         lobbies[lobbycode] = {};
+        data.forEach((el) => {
+            lobbies[lobbycode][el.id] = el.val;
+        });
+
+        lobbies[lobbycode].timestamp = Date.now();
+        lobbyIDs.push(lobbycode);
+
+        return 200;
     } else {
-        createLobby(data);
+        return 404;
     }
 }
 
