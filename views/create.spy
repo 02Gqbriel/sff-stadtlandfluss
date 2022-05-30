@@ -55,18 +55,67 @@
 </head>
 
 <body>
+    <div id="back" style="position: absolute; left: 10px; top: 10px">back</div>
     <h1>Erstellen</h1>
     <div class="centerStuff">
         <div class="settingsContainer">
-            Anzahl der Runden:
+            <span>Anzahl der Runden:</span>
             <input type="number" class="rundenzahl" />
-            <br /> Zeit pro Runde (in Minuten): <input type="number" class="rundenzeit" /> <br /> Anzahl der Kategorien: <input type="number" class="anzKategorien" /> <br /> Kategorie 1: <input type="text" /> <br /> Kategorie 2: <input type="text" />            <br /> Kategorie 3: <input type="text" /> <br /> Kategorie 4:<input type="text" />
+            <br />
+            <span>Zeit pro Runde (in Minuten): </span>
+            <input type="number" class="rundenzeit" />
+            <br />
+            <span>Anzahl der Kategorien:</span>
+            <input type="number" class="anzKategorien" />
+            <span id="iContainer"> </span>
         </div>
     </div>
     <div class="submitSettings">
         <button type="submit" class="createGame">Erstellen</button>
     </div>
     <script>
+        document.querySelector('.anzKategorien').oninput = (e) => {
+            let v = parseInt(e.target.value);
+
+            function p() {
+                const con = document.querySelector('#iContainer'),
+                    len = con.children.length;
+
+                if (len > v) {
+                    for (let i = len; i > v; i--) {
+                        con.removeChild(con.childNodes.item(i));
+                    }
+                } else {
+                    for (let i = len; i < v; i++) {
+                        con.append(createKatInput(i + 1));
+                    }
+                }
+            }
+
+            if (v == null || typeof v == 'string' || v <= 0 || v > 8) {
+                alert('ZWISCHEN 1 UND 8 KATEGORIEN');
+                e.target.value = 1;
+                v = 1;
+                p();
+            }
+
+            p();
+        };
+
+        function createKatInput(i) {
+            const div = document.createElement('div'),
+                span = document.createElement('span'),
+                input = document.createElement('input');
+
+            span.innerText = 'Kategorie ' + i + ': ';
+            div.classList.add('inputContainer');
+
+            div.append(span);
+            div.append(input);
+
+            return div;
+        }
+
         document.querySelector('.createGame').onclick = async() => {
             const i = [...document.querySelectorAll('input')],
                 r = [];
@@ -81,8 +130,6 @@
                 });
             }
 
-            console.log(r);
-
             const res = await fetch('/create', {
                 method: 'POST',
                 headers: {
@@ -92,6 +139,10 @@
             });
 
             console.log(res);
+        };
+
+        document.querySelector('#back').onclick = (e) => {
+            location.assign('/page?_=login');
         };
     </script>
 </body>

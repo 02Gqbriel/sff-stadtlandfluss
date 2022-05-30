@@ -13,7 +13,7 @@ app.use(express.json());
 
 // DATABASE
 
-const connections = {};
+const connections = [];
 
 const lobbies = {};
 
@@ -69,6 +69,10 @@ app.post('/create', async(req, res) => {
 // WEBSOCKET Connections
 
 wsServer.on('connection', (socket) => {
+    const { id } = initConnection(socket);
+
+    socket.send({ code: 'init', data: { id } });
+
     socket.on('message', (message) => {
         const data = JSON.parse(message.toString());
         console.log(data);
@@ -100,7 +104,7 @@ server.on('upgrade', (request, socket, head) => {
 
 // Utitlity Function
 
-async function createLobby(data) {
+function createLobby(data) {
     const lobbycode = rndmstr.generate({ capitalization: 'uppercase', length: 6 });
 
     if (lobbies[lobbycode] == undefined) {
@@ -108,4 +112,12 @@ async function createLobby(data) {
     } else {
         createLobby(data);
     }
+}
+
+function initConnection(socket) {
+    const data = { id: rndmstr.generate({ length: 12 }), socket };
+
+    connections.push(data);
+
+    return id;
 }
