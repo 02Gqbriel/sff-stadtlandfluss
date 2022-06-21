@@ -1,4 +1,3 @@
-const { timeStamp } = require('console');
 const express = require('express'),
     ws = require('ws'),
     path = require('path'),
@@ -70,11 +69,30 @@ app.post('/create', async(req, res) => {
     res.sendStatus(createLobby(data));
 });
 
+app.get('/api/list', async(req, res) => {
+    res.json(lobbies);
+});
+
+app.get('/join', (req, res) => {
+    const { username, lobbycode } = req.query;
+
+    if (lobbycode == undefined) return res.sendStatus(404);
+
+    const lobby = getLobby(lobbycode);
+
+    if (lobby == null) return res.sendStatus(404);
+
+    joinLobby(username, lobbycode);
+
+    return res.json(lobby);
+});
+
 // =========================================
 
 // WEBSOCKET Connections
 
 wsServer.on('connection', (socket) => {
+    console.log('[WebSocket]> New Connection on ' + socket.url);
     const { id } = initConnection(socket);
 
     socket.send({ code: 'init', data: { id } });
@@ -95,9 +113,9 @@ wsServer.on('close', () => {
 
 // =========================================
 
-const server = app.listen(3000, (err) => {
+const server = app.listen(3002, (err) => {
     if (err) return console.log('[HTTP]> ', err);
-    console.log('[HTTP]> Server listening on http://localhost:3000');
+    console.log('[HTTP]> Server listening on http://localhost:3002');
 });
 
 server.on('upgrade', (request, socket, head) => {
@@ -109,12 +127,15 @@ server.on('upgrade', (request, socket, head) => {
 // =========================================
 
 // Utitlity Function
+function joinLobby(username, lobbycode) {}
 
 function createLobby(data) {
     const lobbycode = rndmstr.generate({ capitalization: 'uppercase', length: 6 });
 
     for (let i = 0; i < lobbyIDs.length; i++) {
-        if (Date.now() - lobbies[lobbyIDs[i]].timestamp >= 360000) {}
+        if (Date.now() - lobbies[lobbyIDs[i]].timestamp >= 360000) {
+            lobbies[lobbyIDs[i]] = undefined;
+        }
     }
 
     if (lobbies[lobbycode] == undefined) {
@@ -126,10 +147,18 @@ function createLobby(data) {
         lobbies[lobbycode].timestamp = Date.now();
         lobbyIDs.push(lobbycode);
 
+        lobbies[lobbycode].admin;
+
         return 200;
     } else {
         return 404;
     }
+}
+
+function getLobby(lobbycode) {
+    if (lobbies[lobbycode] == undefined) return null;
+
+    return lobbies[lobbycode];
 }
 
 function initConnection(socket) {
