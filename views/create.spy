@@ -132,7 +132,9 @@
                 console.log(v);
 
                 r.push({
-                    id: i[j].classList[0] == undefined ? 'kategorie_' + (j - 2) : i[j].classList[0],
+                    id: i[j].classList[0] == undefined ?
+                        'kategorie_' + (j - 2) :
+                        i[j].classList[0],
                     val: v,
                 });
             }
@@ -145,7 +147,12 @@
                 body: JSON.stringify(r),
             });
 
-            console.log(res);
+            const d = await res.json();
+
+            localStorage.setItem('lobbycode', d.lobbycode);
+            localStorage.setItem('status', 'admin');
+
+            location.assign('/page?_=lobby&lobbycode=' + d.lobbycode);
         };
 
         document.querySelector('#back').onclick = (e) => {

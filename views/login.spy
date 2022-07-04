@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.png" />
     <style>
         * {
             overflow: hidden;
@@ -37,7 +37,7 @@
             margin-top: 60px;
         }
         
-        .loginButton {
+        .btn {
             background-color: #42c2ff;
             border-radius: 20px;
             width: 240px;
@@ -69,13 +69,46 @@
     </div>
 
     <div class="loginSubmit">
-        <button class="loginButton" type="submit">Raum betreten</button>
-        <button class="createButton loginButton" type="submit">Raum erstellen</button>
+        <button class="createButton btn" type="submit">Raum erstellen</button>
+        <button class="loginButton btn" type="submit">Raum betreten</button>
     </div>
 
     <script>
         document.querySelector('.createButton').onclick = () => {
             location.replace('/page?_=create');
+        };
+
+        const inputs = ['', ''];
+
+        [...document.querySelectorAll('input')].forEach((e, i) => {
+            console.log(e);
+            e.oninput = () => {
+                inputs[i] = e.value;
+            };
+        });
+
+        document.querySelector('.loginButton').onclick = async() => {
+            const res = await fetch(
+                `/join?lobbycode=${inputs[1]}&username=${inputs[0]}`
+            );
+
+            if (res.status == 200) {
+                const data = await res.json();
+
+                localStorage.setItem('username', inputs[0]);
+                localStorage.setItem('lobbycode', data.lobbycode);
+                localStorage.setItem('status', 'player');
+
+                window.location.replace(
+                    '/page?_=loading&lobbycode=' + data.lobbycode
+                );
+            } else {
+                [...document.querySelectorAll('input')].forEach((e, i) => {
+                    e.value = '';
+                });
+
+                alert('Ups somethin went wrong!');
+            }
         };
     </script>
 </body>

@@ -1,4 +1,3 @@
-const { timeStamp } = require('console');
 const express = require('express'),
     ws = require('ws'),
     path = require('path'),
@@ -16,15 +15,28 @@ app.use(express.json());
 
 const connections = [];
 
-const lobbies = {};
-const lobbyIDs = [];
+const lobbies = {
+    JKONCE: {
+        rundenzahl: 2,
+        rundenzeit: 2,
+        anzKategorien: 2,
+        kategorie_1: 'Land',
+        kategorie_2: 'Fluss',
+        timestamp: 1655887018229,
+        players: [{ name: "Besser", socket: null }],
+        admin: {
+            name: "Peter",
+            socket: null,
+        }
+    },
+};
+const lobbyIDs = ['JKONCE'];
 
 // =========================================
 
 // HTTP Requests
 
 app.get('/', (req, res) => {
-    console.log(req.originalUrl);
     res.redirect('/page?_=login');
 });
 
@@ -37,6 +49,14 @@ app.get('/page', (req, res) => {
         case 'create':
             break;
         case 'lobby':
+            const lobby = lobbies[req.query.lobbycode];
+
+            playersHtml = '';
+            lobby.players.forEach((el) => {
+                playersHtml += '<tr><td>' + el + '</td></tr>';
+            });
+
+            data = { playerAmount: lobby.players.length, players: playersHtml };
             break;
         case 'answer':
             break;
@@ -48,7 +68,7 @@ app.get('/page', (req, res) => {
             break;
     }
 
-    res.render(`${req.query['_']}`, data);
+    res.render(`${req.query['_']}`, {...data });
 });
 
 app.get('/script', (req, res) => {
@@ -64,10 +84,27 @@ app.get('/favicon.png', (req, res) => {
 });
 
 app.post('/create', async(req, res) => {
-    const data = req.body;
-    console.log(data);
+    const { status, data } = createLobby(req.body);
 
-    res.sendStatus(createLobby(data));
+    res.status(status).send(data);
+});
+
+app.get('/api/list', async(req, res) => {
+    res.json(lobbies);
+});
+
+app.get('/join', (req, res) => {
+    const { username, lobbycode } = req.query;
+
+    if (lobbycode == undefined) return res.sendStatus(404);
+
+    const lobby = getLobby(lobbycode);
+
+    if (lobby == null) return res.sendStatus(404);
+
+    joinLobby(username, lobby);
+
+    return res.json({ lobbycode, lobby });
 });
 
 // =========================================
@@ -75,13 +112,41 @@ app.post('/create', async(req, res) => {
 // WEBSOCKET Connections
 
 wsServer.on('connection', (socket) => {
+    console.log('[WebSocket]> New Connection on ' + (socket.link || "Not Accessable"));
     const { id } = initConnection(socket);
 
-    socket.send({ code: 'init', data: { id } });
+    socket.send(JSON.stringify({ code: 'init', data: { id } }));
 
     socket.on('message', (message) => {
-        const data = JSON.parse(message.toString());
-        console.log(data);
+        const res = JSON.parse(message.toString());
+
+        if (res.code == 'init') {
+            if (res.data.type == "admin") {
+                for (let connection of connections) {
+                    if (res.data.id == connection.id) {
+                        connection = {...connection, ...res.data };
+
+                        lobbies[res.data.lobbycode].admin = {
+                            name: res.data.username,
+                            socket: connection.socket
+                        }
+                    }
+                }
+            }
+
+            if (res.data.type == "player") {
+                for (let connection of connections) {
+                    if (res.data.id == connection.id) {
+                        connection = {...connection, ...res.data };
+
+                        for (let player of lobbies[res.data.lobbycode].players) {
+                            if (player.name == res.data.username)
+                                player.socket = connection.socket;
+                        }
+                    }
+                }
+            }
+        }
     });
 });
 
@@ -95,9 +160,9 @@ wsServer.on('close', () => {
 
 // =========================================
 
-const server = app.listen(3000, (err) => {
+const server = app.listen(3002, (err) => {
     if (err) return console.log('[HTTP]> ', err);
-    console.log('[HTTP]> Server listening on http://localhost:3000');
+    console.log('[HTTP]> Server listening on http://localhost:3002');
 });
 
 server.on('upgrade', (request, socket, head) => {
@@ -109,12 +174,23 @@ server.on('upgrade', (request, socket, head) => {
 // =========================================
 
 // Utitlity Function
+function joinLobby(username, lobby) {
+    if (lobby.admin.socket != null) {
+        lobby.players.push({ name: username, socket: null });
+
+        console.log(lobby.admin.socket);
+
+        lobby.admin.socket.send(JSON.stringify({ code: "joined", data: { username } }));
+    }
+}
 
 function createLobby(data) {
     const lobbycode = rndmstr.generate({ capitalization: 'uppercase', length: 6 });
 
     for (let i = 0; i < lobbyIDs.length; i++) {
-        if (Date.now() - lobbies[lobbyIDs[i]].timestamp >= 360000) {}
+        if (Date.now() - lobbies[lobbyIDs[i]].timestamp >= 360000) {
+            lobbies[lobbyIDs[i]] = undefined;
+        }
     }
 
     if (lobbies[lobbycode] == undefined) {
@@ -126,10 +202,19 @@ function createLobby(data) {
         lobbies[lobbycode].timestamp = Date.now();
         lobbyIDs.push(lobbycode);
 
-        return 200;
+        lobbies[lobbycode].players = [];
+        lobbies[lobbycode].admin = { name: null, socket: null }
+
+        return { status: 200, data: { lobbycode } };
     } else {
-        return 404;
+        return { status: 404, data: null };
     }
+}
+
+function getLobby(lobbycode) {
+    if (lobbies[lobbycode] == undefined) return null;
+
+    return lobbies[lobbycode];
 }
 
 function initConnection(socket) {
@@ -137,5 +222,5 @@ function initConnection(socket) {
 
     connections.push(data);
 
-    return id;
+    return data;
 }

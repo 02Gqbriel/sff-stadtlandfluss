@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <script>
+        const ws = new WebSocket('ws://localhost:3002');
+
+        ws.addEventListener('message', (ev) => {
+            const res = JSON.parse(ev.data);
+
+            switch (res.code) {
+                case 'init':
+                    localStorage.setItem('id', res.data.id);
+                    ws.send(
+                        JSON.stringify({
+                            code: 'init',
+                            data: {
+                                type: 'player',
+                                id: res.data.id,
+                                username: localStorage.getItem('username') || null,
+                                lobbycode: localStorage.getItem('lobbycode') || null,
+                            },
+                        })
+                    );
+                    break;
+            }
+        });
+    </script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StadtLandFluss | Loading</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png" />
+    <style>
+        * {
+            font-family: 'Acme', sans-serif;
+            overflow: hidden;
+        }
+        
+        body {
+            background-color: #b8fff9;
+        }
+        
+        h1 {
+            font-size: 40px;
+            text-align: center;
+            margin-top: 50vh;
+        }
+        
+        .image {
+            position: absolute;
+            margin-top: 30vh;
+            width: 100vw;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="image">
+        <?xml version="1.0" encoding="utf-8"?>
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="
+					margin: auto;
+					background: none;
+					display: block;
+					shape-rendering: auto;
+					animation-play-state: running;
+					animation-delay: 0s;
+				" width="157px" height="157px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+				<circle
+					cx="50"
+					cy="50"
+					fill="none"
+					stroke="#42c2ff"
+					stroke-width="9"
+					r="26"
+					stroke-dasharray="122.52211349000194 42.840704496667314"
+					style="animation-play-state: running; animation-delay: 0s"
+				>
+					<animateTransform
+						attributeName="transform"
+						type="rotate"
+						repeatCount="indefinite"
+						dur="1.7543859649122806s"
+						values="0 50 50;360 50 50"
+						keyTimes="0;1"
+						style="animation-play-state: running; animation-delay: 0s"
+					></animateTransform>
+				</circle>
+			</svg>
+    </div>
+    <h1>Sie sind in der Lobby! Warten Sie bis der Host das game startet...</h1>
+</body>
+
+</html>

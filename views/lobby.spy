@@ -2,6 +2,33 @@
 <html lang="de">
 
 <head>
+    <script>
+        const ws = new WebSocket('ws://localhost:3002');
+
+        ws.addEventListener('message', (ev) => {
+            const res = JSON.parse(ev.data);
+
+            switch (res.code) {
+                case 'init':
+                    localStorage.setItem('id', res.data.id);
+                    ws.send(
+                        JSON.stringify({
+                            code: 'init',
+                            data: {
+                                type: 'admin',
+                                id: res.data.id,
+                                lobbycode: localStorage.getItem('lobbycode') || null,
+                            },
+                        })
+                    );
+                    break;
+                case 'new_player':
+                    document.querySelector('.players').innerHTML +=
+                        '<tr><td>' + res.data.player + '</td></tr>';
+                    break;
+            }
+        });
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.png" />
     <style>
         * {
             font-family: 'Acme', sans-serif;
@@ -63,28 +90,16 @@
 
 <body>
     <h1>Lobby</h1>
-    <p>Anzahl der Spieler:</p>
+    <p>
+        Anzahl der Spieler: <span>{{ playerAmount }}</span>
+    </p>
     <div class="centerStuff">
         <div class="spielerContainer">
             <table class="spieler">
                 <tr>
                     <th style="background-color: #42c2ff">Spieler</th>
                 </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                </tr>
+                {{ players }}
             </table>
         </div>
     </div>
