@@ -23,11 +23,11 @@ const lobbies = {
         kategorie_1: 'Land',
         kategorie_2: 'Fluss',
         timestamp: 1655887018229,
-        players: [{ name: "Besser", socket: null }],
+        players: [{ name: 'Besser', socket: null }],
         admin: {
-            name: "Peter",
+            name: 'Peter',
             socket: null,
-        }
+        },
     },
 };
 const lobbyIDs = ['JKONCE'];
@@ -112,7 +112,7 @@ app.get('/join', (req, res) => {
 // WEBSOCKET Connections
 
 wsServer.on('connection', (socket) => {
-    console.log('[WebSocket]> New Connection on ' + (socket.link || "Not Accessable"));
+    console.log('[WebSocket]> New Connection on ' + (socket.link || 'Not Accessable'));
     const { id } = initConnection(socket);
 
     socket.send(JSON.stringify({ code: 'init', data: { id } }));
@@ -121,27 +121,26 @@ wsServer.on('connection', (socket) => {
         const res = JSON.parse(message.toString());
 
         if (res.code == 'init') {
-            if (res.data.type == "admin") {
+            if (res.data.type == 'admin') {
                 for (let connection of connections) {
                     if (res.data.id == connection.id) {
                         connection = {...connection, ...res.data };
 
                         lobbies[res.data.lobbycode].admin = {
                             name: res.data.username,
-                            socket: connection.socket
-                        }
+                            socket: connection.socket,
+                        };
                     }
                 }
             }
 
-            if (res.data.type == "player") {
+            if (res.data.type == 'player') {
                 for (let connection of connections) {
                     if (res.data.id == connection.id) {
                         connection = {...connection, ...res.data };
 
                         for (let player of lobbies[res.data.lobbycode].players) {
-                            if (player.name == res.data.username)
-                                player.socket = connection.socket;
+                            if (player.name == res.data.username) player.socket = connection.socket;
                         }
                     }
                 }
@@ -180,7 +179,7 @@ function joinLobby(username, lobby) {
 
         console.log(lobby.admin.socket);
 
-        lobby.admin.socket.send(JSON.stringify({ code: "joined", data: { username } }));
+        lobby.admin.socket.send(JSON.stringify({ code: 'joined', data: { username } }));
     }
 }
 
@@ -203,7 +202,7 @@ function createLobby(data) {
         lobbyIDs.push(lobbycode);
 
         lobbies[lobbycode].players = [];
-        lobbies[lobbycode].admin = { name: null, socket: null }
+        lobbies[lobbycode].admin = { name: null, socket: null };
 
         return { status: 200, data: { lobbycode } };
     } else {

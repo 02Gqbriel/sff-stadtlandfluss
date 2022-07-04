@@ -88,9 +88,7 @@
         });
 
         document.querySelector('.loginButton').onclick = async() => {
-            const res = await fetch(
-                `/join?lobbycode=${inputs[1]}&username=${inputs[0]}`
-            );
+            const res = await fetch(`/join?lobbycode=${inputs[1]}&username=${inputs[0]}`);
 
             if (res.status == 200) {
                 const data = await res.json();
@@ -99,9 +97,7 @@
                 localStorage.setItem('lobbycode', data.lobbycode);
                 localStorage.setItem('status', 'player');
 
-                window.location.replace(
-                    '/page?_=loading&lobbycode=' + data.lobbycode
-                );
+                window.location.replace('/page?_=loading&lobbycode=' + data.lobbycode);
             } else {
                 [...document.querySelectorAll('input')].forEach((e, i) => {
                     e.value = '';
